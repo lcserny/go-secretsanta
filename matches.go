@@ -45,8 +45,14 @@ func (c *matchesController) generateLinks(writer http.ResponseWriter, request *h
     }
 
     var links []string
+	
+	protocol := "http"
+    if request.TLS != nil {
+        protocol = "https"
+    }
+
     for _, pair := range matches {
-        links = append(links, fmt.Sprintf("http://%s/%s/%s/%s", request.Host, MATCHES_ROUTE, pair.name, pair.token))
+        links = append(links, fmt.Sprintf("%s://%s/%s/%s/%s", protocol, request.Host, MATCHES_ROUTE, pair.name, pair.token))
     }
 
     writer.WriteHeader(http.StatusCreated)

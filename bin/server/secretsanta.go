@@ -3,13 +3,26 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/lcserny/go-secretsanta"
 )
 
 func main() {
+    logFile := initLogging()
+    defer logFile.Close()
+
 	initHttpServer()
+}
+
+func initLogging() *os.File {
+    logFile, err := os.OpenFile("secretsanta.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+    if err != nil {
+        log.Fatalf("Failed to open log file: %v", err)
+    }
+    log.SetOutput(logFile)
+    return logFile
 }
 
 func initHttpServer() {
