@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -21,7 +22,10 @@ func initLogging() *os.File {
 	if err != nil {
 		log.Fatalf("Failed to open log file: %v", err)
 	}
-	log.SetOutput(logFile)
+
+	multiWriter := io.MultiWriter(os.Stdout, logFile)
+	log.SetOutput(multiWriter)
+
 	return logFile
 }
 
